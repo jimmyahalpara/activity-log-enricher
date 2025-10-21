@@ -9,13 +9,13 @@ use JimmyAhalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
 /**
  * Value object representing enrichment configuration for a field.
  */
-final readonly class EnrichmentConfig implements EnrichmentConfigInterface
+final class EnrichmentConfig implements EnrichmentConfigInterface
 {
     public function __construct(
-        private string $foreignKey,
-        private string $modelClass,
-        private string $labelAttribute = 'label',
-        private string $newKey = '',
+        private readonly string $foreignKey,
+        private readonly string $modelClass,
+        private readonly string $labelAttribute = 'label',
+        private readonly string $newKey = '',
     ) {}
 
     /**

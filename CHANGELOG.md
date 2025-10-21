@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-activitylog-enricher` will be documented in this file.
 
+## 1.0.1 - 2025-10-21
+
+### Added
+- Laravel 12.x support with full compatibility
+- PHP 8.4 support in test matrix
+- PHPUnit 11 and PHPStan 2 support
+- Automated GitHub Actions release workflow
+
+### Changed
+- Updated minimum PHP version to 8.2
+- Updated test matrix to include Laravel 12 with Orchestra Testbench 10.x
+- Improved documentation with release process guide
+
 ## 1.0.0 - 2025-10-21
 
 ### Added

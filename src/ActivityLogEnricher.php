@@ -276,6 +276,7 @@ final class ActivityLogEnricher
             if (in_array($labelAttribute, $model->getAppends(), true)) {
                 // For appended attributes, try accessing via attribute
                 $value = $model->getAttribute($labelAttribute);
+
                 if ($value !== null) {
                     return (string) $value;
                 }

@@ -20,8 +20,8 @@ A Laravel package that enriches [Spatie ActivityLog](https://github.com/spatie/l
 
 ## Requirements
 
-- PHP 8.1 or higher
-- Laravel 9.0, 10.0, or 11.0
+- PHP 8.2 or higher
+- Laravel 9.0, 10.0, 11.0, or 12.0
 - Spatie Laravel ActivityLog 4.0+
 
 ## Installation

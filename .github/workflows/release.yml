@@ -1,0 +1,88 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from composer.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.version // "0.0.0"' composer.json)
+          if [ "$VERSION" = "0.0.0" ]; then
+            # If no version in composer.json, use timestamp-based version
+            VERSION="v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)"
+          else
+            VERSION="v${VERSION}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag ${{ steps.get_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag ${{ steps.get_version.outputs.version }} does not exist"
+          fi
+
+      - name: Generate changelog
+        id: changelog
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          # Get the last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LAST_TAG" ]; then
+            # First release - get all commits
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            # Get commits since last tag
+            CHANGELOG=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          
+          # Save to file to handle multiline
+          echo "$CHANGELOG" > /tmp/changelog.txt
+          
+          # Create release notes
+          {
+            echo "## What's Changed"
+            echo ""
+            cat /tmp/changelog.txt
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${LAST_TAG}...${{ steps.get_version.outputs.version }}"
+          } > /tmp/release_notes.txt
+
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body_path: /tmp/release_notes.txt
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release already exists
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "⚠️ Release ${{ steps.get_version.outputs.version }} already exists. Skipping release creation."
+          echo "To create a new release, update the version in composer.json or ensure the tag doesn't exist."

@@ -18,7 +18,7 @@ final class ActivityLogEnricherServiceProvider extends ServiceProvider
             'activity-log-enricher'
         );
 
-        $this->app->singleton(ActivityLogEnricher::class, function () {
+        $this->app->singleton(ActivityLogEnricher::class, static function () {
             return new ActivityLogEnricher();
         });
 

@@ -16,8 +16,7 @@ final readonly class EnrichmentConfig implements EnrichmentConfigInterface
         private string $modelClass,
         private string $labelAttribute = 'label',
         private string $newKey = '',
-    ) {
-    }
+    ) {}
 
     /**
      * Get the foreign key field name.
@@ -67,12 +66,12 @@ final readonly class EnrichmentConfig implements EnrichmentConfigInterface
      */
     public function getNestedKeys(): array
     {
-        if (!$this->isNestedPattern()) {
+        if (! $this->isNestedPattern()) {
             return ['', ''];
         }
 
         $parts = explode('.*.', $this->foreignKey, 2);
-        
+
         return [$parts[0], $parts[1]];
     }
 
@@ -83,12 +82,12 @@ final readonly class EnrichmentConfig implements EnrichmentConfigInterface
     private function guessNewKey(): string
     {
         $key = $this->foreignKey;
-        
+
         // For nested patterns, use the nested key part
         if ($this->isNestedPattern()) {
             [, $key] = $this->getNestedKeys();
         }
-        
+
         if (str_ends_with($key, '_id')) {
             return substr($key, 0, -3);
         }

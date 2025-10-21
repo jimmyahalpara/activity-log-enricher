@@ -12,7 +12,7 @@ class TestModel extends Model
     use SoftDeletes;
 
     protected $table = 'test_models';
-    
+
     protected $fillable = ['name', 'description'];
 
     /** @var array<string> */

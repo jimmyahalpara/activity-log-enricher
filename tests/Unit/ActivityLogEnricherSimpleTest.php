@@ -13,21 +13,21 @@ use Spatie\Activitylog\Models\Activity;
 class ActivityLogEnricherSimpleTest extends TestCase
 {
     private ActivityLogEnricher $enricher;
+
     private Activity $activity;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->enricher = new ActivityLogEnricher();
         $this->activity = new Activity();
-        
+
         // Create test data
         $this->createTestModels();
     }
 
-    /** @test */
-    public function it_can_enrich_simple_properties(): void
+    public function testItCanEnrichSimpleProperties(): void
     {
         $this->activity->properties = collect([
             'attributes' => ['test_model_id' => 1],
@@ -44,13 +44,12 @@ class ActivityLogEnricherSimpleTest extends TestCase
         $this->enricher->enrichActivity($this->activity, $fieldMappings);
 
         $properties = $this->activity->properties->toArray();
-        
-        $this->assertArrayHasKey('test_model', $properties['attributes']);
-        $this->assertStringContainsString('Test Model 1', $properties['attributes']['test_model']);
+
+        self::assertArrayHasKey('test_model', $properties['attributes']);
+        self::assertStringContainsString('Test Model 1', $properties['attributes']['test_model']);
     }
 
-    /** @test */
-    public function it_throws_exception_for_missing_class(): void
+    public function testItThrowsExceptionForMissingClass(): void
     {
         $this->expectException(InvalidModelException::class);
 
@@ -63,8 +62,7 @@ class ActivityLogEnricherSimpleTest extends TestCase
         $this->enricher->enrichActivity($this->activity, $fieldMappings);
     }
 
-    /** @test */
-    public function it_handles_empty_properties(): void
+    public function testItHandlesEmptyProperties(): void
     {
         $this->activity->properties = collect([]);
 
@@ -77,7 +75,7 @@ class ActivityLogEnricherSimpleTest extends TestCase
 
         $this->enricher->enrichActivity($this->activity, $fieldMappings);
 
-        $this->assertEquals([], $this->activity->properties->toArray());
+        self::assertSame([], $this->activity->properties->toArray());
     }
 
     private function createTestModels(): void

@@ -35,7 +35,6 @@ return (new PhpCsFixer\Config())
             'statements' => ['return', 'throw', 'try', 'if', 'foreach', 'for', 'while'],
         ],
         'blank_line_after_opening_tag' => true,
-        'single_blank_line_before_namespace' => true,
         
         // Casing
         'constant_case' => ['case' => 'lower'],
@@ -177,9 +176,6 @@ return (new PhpCsFixer\Config())
         
         // Whitespace
         'array_indentation' => true,
-        'blank_line_before_statement' => [
-            'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try'],
-        ],
         'compact_nullable_typehint' => true,
         'heredoc_indentation' => true,
         'method_chaining_indentation' => true,

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void enrichActivity(\Spatie\Activitylog\Models\Activity $activity, array<string, array<string, mixed>> $fieldMappings)
  * @method static void enrichActivityWithConfig(\Spatie\Activitylog\Models\Activity $activity, string $configKey = 'default')
  *
- * @see \Ahalpara\ActivityLogEnricher\ActivityLogEnricher
+ * @see \JimmyAhalpara\ActivityLogEnricher\ActivityLogEnricher
  */
 final class ActivityLogEnricher extends Facade
 {

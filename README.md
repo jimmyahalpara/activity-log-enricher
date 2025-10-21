@@ -1,7 +1,7 @@
 # Laravel ActivityLog Enricher
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ahalpara/laravel-activitylog-enricher.svg?style=flat-square)](https://packagist.org/packages/ahalpara/laravel-activitylog-enricher)
-[![Total Downloads](https://img.shields.io/packagist/dt/ahalpara/laravel-activitylog-enricher.svg?style=flat-square)](https://packagist.org/packages/ahalpara/laravel-activitylog-enricher)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jimmyahalpara/laravel-activitylog-enricher.svg?style=flat-square)](https://packagist.org/packages/jimmyahalpara/laravel-activitylog-enricher)
+[![Total Downloads](https://img.shields.io/packagist/dt/jimmyahalpara/laravel-activitylog-enricher.svg?style=flat-square)](https://packagist.org/packages/jimmyahalpara/laravel-activitylog-enricher)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/jimmyahalpara/laravel-activitylog-enricher/Tests?label=tests&style=flat-square)](https://github.com/jimmyahalpara/laravel-activitylog-enricher/actions?query=workflow%3ATests+branch%3Amain)
 [![PHP Stan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://phpstan.org/)
 
@@ -29,7 +29,7 @@ A Laravel package that enriches [Spatie ActivityLog](https://github.com/spatie/l
 Install the package via Composer:
 
 ```bash
-composer require ahalpara/laravel-activitylog-enricher
+composer require jimmyahalpara/laravel-activitylog-enricher
 ```
 
 The package will automatically register its service provider.
@@ -37,7 +37,7 @@ The package will automatically register its service provider.
 Optionally, publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="Ahalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider" --tag="activity-log-enricher-config"
+php artisan vendor:publish --provider="JimmyAhalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider" --tag="activity-log-enricher-config"
 ```
 
 ## Quick Start

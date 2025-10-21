@@ -1,0 +1,13 @@
+/vendor/
+/node_modules/
+/coverage/
+/coverage-html/
+/.phpunit.cache/
+/build/
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+/.vscode/
+/.idea/
+*.log
+.DS_Store
+Thumbs.db

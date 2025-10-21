@@ -1,0 +1,15 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    tmpDir: build/phpstan
+    checkUnionTypes: true
+    checkExplicitMixed: true
+    treatPhpDocTypesAsCertain: false
+    
+    ignoreErrors:
+        # Add specific errors to ignore if needed
+        
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon

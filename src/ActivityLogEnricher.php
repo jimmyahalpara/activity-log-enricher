@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace JimmyAhalpara\ActivityLogEnricher;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use JimmyAhalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
 use JimmyAhalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
 use JimmyAhalpara\ActivityLogEnricher\ValueObjects\EnrichmentConfig;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Spatie\Activitylog\Models\Activity;
 use Throwable;
 
 use function array_key_exists;
+use function assert;
 use function in_array;
 use function is_array;
+use function is_string;
 
 /**
  * ActivityLogEnricher - Enriches Spatie ActivityLog entries by resolving foreign key IDs to readable labels.

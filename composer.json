@@ -1,7 +1,7 @@
 {
     "name": "jimmyahalpara/laravel-activitylog-enricher",
     "description": "A Laravel package to enrich Spatie ActivityLog entries by resolving foreign key IDs to readable labels",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "type": "library",
     "license": "MIT",
     "keywords": [

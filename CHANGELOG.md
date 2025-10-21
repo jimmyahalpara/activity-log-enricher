@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-activitylog-enricher` will be documented in this file.
 
+## 1.1.0 - 2025-10-21
+
+### Fixed
+- Updated package name in README badges from `ahalpara/laravel-activitylog-enricher` to `jimmyahalpara/laravel-activitylog-enricher`
+- Updated composer require command to use correct package name `jimmyahalpara/laravel-activitylog-enricher`
+- Updated vendor:publish provider namespace from `Ahalpara\ActivityLogEnricher` to `JimmyAhalpara\ActivityLogEnricher`
+- Fixed @see annotation in Facade class to reference correct namespace `JimmyAhalpara\ActivityLogEnricher`
+
 ## 1.0.1 - 2025-10-21
 
 ### Added

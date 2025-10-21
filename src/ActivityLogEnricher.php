@@ -255,8 +255,8 @@ final class ActivityLogEnricher
             return (string) $result;
         }
 
-        // Then, try as attribute accessor method (e.g., getLabelAttribute)
-        $methodName = 'get' . ucfirst($labelAttribute) . 'Attribute';
+        // Then, try as attribute accessor method (e.g., getLabelAttribute or getCustomLabelAttribute)
+        $methodName = 'get' . str_replace('_', '', ucwords($labelAttribute, '_')) . 'Attribute';
 
         if (method_exists($model, $methodName)) {
             $result = $model->{$methodName}();
@@ -272,9 +272,13 @@ final class ActivityLogEnricher
                 return (string) $model->{$labelAttribute};
             }
 
-            // Check if it's an appended attribute
+            // Check if it's an appended attribute - try to access it
             if (in_array($labelAttribute, $model->getAppends(), true)) {
-                return (string) $model->{$labelAttribute};
+                // For appended attributes, try accessing via attribute
+                $value = $model->getAttribute($labelAttribute);
+                if ($value !== null) {
+                    return (string) $value;
+                }
             }
         } catch (Throwable) {
             // Continue to fallback

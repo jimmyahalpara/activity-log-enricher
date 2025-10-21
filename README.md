@@ -49,7 +49,7 @@ Use the enricher in your model's `tapActivity` method:
 ```php
 <?php
 
-use Ahalpara\ActivityLogEnricher\Facades\ActivityLogEnricher;
+use JimmyAhalpara\ActivityLogEnricher\Facades\ActivityLogEnricher;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -433,7 +433,7 @@ The enricher is designed to be resilient and will continue processing even when 
 ### Exception Types
 
 ```php
-use Ahalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
+use JimmyAhalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
 
 try {
     ActivityLogEnricher::enrichActivity($activity, $invalidMapping);

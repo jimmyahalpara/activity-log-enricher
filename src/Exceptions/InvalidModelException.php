@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Exceptions;
+namespace JimmyAhalpara\ActivityLogEnricher\Exceptions;
 
 use InvalidArgumentException;
 

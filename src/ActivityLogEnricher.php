@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher;
+namespace JimmyAhalpara\ActivityLogEnricher;
 
-use Ahalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
-use Ahalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
-use Ahalpara\ActivityLogEnricher\ValueObjects\EnrichmentConfig;
+use JimmyAhalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
+use JimmyAhalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
+use JimmyAhalpara\ActivityLogEnricher\ValueObjects\EnrichmentConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Spatie\Activitylog\Models\Activity;

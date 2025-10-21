@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Contracts;
+namespace JimmyAhalpara\ActivityLogEnricher\Contracts;
 
 /**
  * Interface for enrichment configuration objects.

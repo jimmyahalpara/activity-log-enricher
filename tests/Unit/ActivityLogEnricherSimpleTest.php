@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Tests\Unit;
+namespace JimmyAhalpara\ActivityLogEnricher\Tests\Unit;
 
-use Ahalpara\ActivityLogEnricher\ActivityLogEnricher;
-use Ahalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
-use Ahalpara\ActivityLogEnricher\Tests\Models\TestModel;
-use Ahalpara\ActivityLogEnricher\Tests\TestCase;
+use JimmyAhalpara\ActivityLogEnricher\ActivityLogEnricher;
+use JimmyAhalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
+use JimmyAhalpara\ActivityLogEnricher\Tests\Models\TestModel;
+use JimmyAhalpara\ActivityLogEnricher\Tests\TestCase;
 use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogEnricherSimpleTest extends TestCase

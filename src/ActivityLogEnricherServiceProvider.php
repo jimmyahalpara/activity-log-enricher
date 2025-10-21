@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher;
+namespace JimmyAhalpara\ActivityLogEnricher;
 
 use Illuminate\Support\ServiceProvider;
 

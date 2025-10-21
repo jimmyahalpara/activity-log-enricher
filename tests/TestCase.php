@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Tests;
+namespace JimmyAhalpara\ActivityLogEnricher\Tests;
 
-use Ahalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider;
+use JimmyAhalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 abstract class TestCase extends OrchestraTestCase

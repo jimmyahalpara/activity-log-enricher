@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Facades;
+namespace JimmyAhalpara\ActivityLogEnricher\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

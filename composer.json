@@ -39,21 +39,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Ahalpara\\ActivityLogEnricher\\": "src/"
+            "JimmyAhalpara\\ActivityLogEnricher\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ahalpara\\ActivityLogEnricher\\Tests\\": "tests/"
+            "JimmyAhalpara\\ActivityLogEnricher\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Ahalpara\\ActivityLogEnricher\\ActivityLogEnricherServiceProvider"
+                "JimmyAhalpara\\ActivityLogEnricher\\ActivityLogEnricherServiceProvider"
             ],
             "aliases": {
-                "ActivityLogEnricher": "Ahalpara\\ActivityLogEnricher\\Facades\\ActivityLogEnricher"
+                "ActivityLogEnricher": "JimmyAhalpara\\ActivityLogEnricher\\Facades\\ActivityLogEnricher"
             }
         }
     },

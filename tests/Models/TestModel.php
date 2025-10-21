@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Tests\Models;
+namespace JimmyAhalpara\ActivityLogEnricher\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

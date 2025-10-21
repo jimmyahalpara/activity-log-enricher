@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\ValueObjects;
+namespace JimmyAhalpara\ActivityLogEnricher\ValueObjects;
 
-use Ahalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
+use JimmyAhalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
 
 /**
  * Value object representing enrichment configuration for a field.

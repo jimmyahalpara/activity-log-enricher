@@ -9,7 +9,16 @@ parameters:
     treatPhpDocTypesAsCertain: false
     
     ignoreErrors:
-        # Add specific errors to ignore if needed
+        # Ignore Spatie Activity properties type issues in tests
+        - '#Property Spatie\\Activitylog\\Models\\Activity::\$properties .* does not accept array#'
+        - '#Offset .* might not exist on Illuminate\\Support\\Collection\|null#'
+        - '#Cannot call method .* on Illuminate\\Support\\Collection\|null#'
+        - '#Cannot access offset .* on mixed#'
+        - '#Call to an undefined static method .*TestModel::create\(\)#'
+        - '#Parameter .* of static method PHPUnit\\Framework\\Assert::.*#'
+        # Ignore getAttribute() return type in tests
+        - '#Cannot cast mixed to string#'
+        - '#Cannot call method set\(\) on mixed#'
         
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon

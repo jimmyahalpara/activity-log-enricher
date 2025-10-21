@@ -2,23 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher;
+namespace JimmyAhalpara\ActivityLogEnricher;
 
-use Ahalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
-use Ahalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
-use Ahalpara\ActivityLogEnricher\ValueObjects\EnrichmentConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use JimmyAhalpara\ActivityLogEnricher\Contracts\EnrichmentConfigInterface;
+use JimmyAhalpara\ActivityLogEnricher\Exceptions\InvalidModelException;
+use JimmyAhalpara\ActivityLogEnricher\ValueObjects\EnrichmentConfig;
 use Spatie\Activitylog\Models\Activity;
 use Throwable;
+
+use function array_key_exists;
+use function assert;
+use function in_array;
+use function is_array;
+use function is_string;
 
 /**
  * ActivityLogEnricher - Enriches Spatie ActivityLog entries by resolving foreign key IDs to readable labels.
  *
  * This class provides functionality to enhance activity log entries by converting foreign key references
  * into human-readable labels, making audit trails more meaningful and user-friendly.
- *
- * @author Jimmy Ahalpara <jimmy@ahalpara.in>
  */
 final class ActivityLogEnricher
 {
@@ -46,7 +50,7 @@ final class ActivityLogEnricher
     public function enrichActivity(Activity $activity, array $fieldMappings): void
     {
         $enrichmentConfigs = $this->buildEnrichmentConfigs($fieldMappings);
-        
+
         $properties = $activity->properties ?? collect();
         $old = $properties->get('old', []);
         $attributes = $properties->get('attributes', []);
@@ -74,10 +78,10 @@ final class ActivityLogEnricher
      */
     public function enrichActivityWithConfig(Activity $activity, string $configKey = 'default'): void
     {
-        /** @var array<string, mixed> $config */
+        /** @var array<string, array<string, mixed>> $config */
         $config = config("activity-log-enricher.mappings.{$configKey}", []);
-        
-        if (empty($config) || !is_array($config)) {
+
+        if (empty($config) || ! is_array($config)) {
             return;
         }
 
@@ -88,42 +92,53 @@ final class ActivityLogEnricher
      * Build enrichment configuration objects from array mappings.
      *
      * @param array<string, array<string, mixed>> $fieldMappings
+     *
      * @return Collection<int, EnrichmentConfigInterface>
      */
     private function buildEnrichmentConfigs(array $fieldMappings): Collection
     {
         return collect($fieldMappings)->map(function (array $config, string $foreignKey): EnrichmentConfig {
             $this->validateMappingConfig($config, $foreignKey);
-            
+
+            $labelAttribute = $config['label_attribute'] ?? 'label';
+            $newKey = $config['new_key'] ?? $this->guessNewKey($foreignKey);
+
+            // After validation, we know class is a string
+            assert(is_string($config['class']));
+
             return new EnrichmentConfig(
                 foreignKey: $foreignKey,
-                modelClass: (string) $config['class'],
-                labelAttribute: (string) ($config['label_attribute'] ?? 'label'),
-                newKey: (string) ($config['new_key'] ?? $this->guessNewKey($foreignKey))
+                modelClass: $config['class'],
+                labelAttribute: is_string($labelAttribute) ? $labelAttribute : 'label',
+                newKey: is_string($newKey) ? $newKey : $foreignKey
             );
-        });
+        })->values();
     }
 
     /**
      * Validate mapping configuration.
      *
      * @param array<string, mixed> $config
-     * @param string $foreignKey
      *
      * @throws InvalidModelException
      */
     private function validateMappingConfig(array $config, string $foreignKey): void
     {
-        if (!isset($config['class'])) {
+        if (! isset($config['class'])) {
             throw new InvalidModelException("Missing 'class' key for field mapping: {$foreignKey}");
         }
 
-        $className = (string) $config['class'];
-        if (!class_exists($className)) {
+        if (! is_string($config['class'])) {
+            throw new InvalidModelException("Class name must be a string for field: {$foreignKey}");
+        }
+
+        $className = $config['class'];
+
+        if (! class_exists($className)) {
             throw new InvalidModelException("Model class '{$className}' does not exist for field: {$foreignKey}");
         }
 
-        if (!is_subclass_of($className, Model::class)) {
+        if (! is_subclass_of($className, Model::class)) {
             throw new InvalidModelException("Class '{$className}' must extend Illuminate\\Database\\Eloquent\\Model for field: {$foreignKey}");
         }
     }
@@ -133,7 +148,6 @@ final class ActivityLogEnricher
      *
      * @param array<string, mixed> $old
      * @param array<string, mixed> $attributes
-     * @param EnrichmentConfigInterface $config
      */
     private function enrichNestedArrayProperties(array &$old, array &$attributes, EnrichmentConfigInterface $config): void
     {
@@ -157,7 +171,6 @@ final class ActivityLogEnricher
      *
      * @param array<string, mixed> $old
      * @param array<string, mixed> $attributes
-     * @param EnrichmentConfigInterface $config
      */
     private function enrichSimpleProperties(array &$old, array &$attributes, EnrichmentConfigInterface $config): void
     {
@@ -166,6 +179,7 @@ final class ActivityLogEnricher
 
         if (isset($old[$foreignKey])) {
             $label = $this->resolveModelLabel($old[$foreignKey], $config);
+
             if ($label !== null) {
                 $old[$newKey] = $label;
             }
@@ -173,6 +187,7 @@ final class ActivityLogEnricher
 
         if (isset($attributes[$foreignKey])) {
             $label = $this->resolveModelLabel($attributes[$foreignKey], $config);
+
             if ($label !== null) {
                 $attributes[$newKey] = $label;
             }
@@ -183,16 +198,17 @@ final class ActivityLogEnricher
      * Enrich nested array items with model labels.
      *
      * @param array<int, mixed> $items
-     * @param string $nestedKey
-     * @param EnrichmentConfigInterface $config
+     *
      * @return array<int, mixed>
      */
     private function enrichNestedArray(array $items, string $nestedKey, EnrichmentConfigInterface $config): array
     {
         foreach ($items as $index => $item) {
             if (is_array($item) && array_key_exists($nestedKey, $item)) {
-                $label = $this->resolveModelLabel($item[$nestedKey], $config);
-                if ($label !== null) {
+                $foreignKeyValue = $item[$nestedKey];
+                $label = $this->resolveModelLabel($foreignKeyValue, $config);
+
+                if ($label !== null && is_array($items[$index])) {
                     $items[$index][$config->getNewKey()] = $label;
                 }
             }
@@ -205,8 +221,6 @@ final class ActivityLogEnricher
      * Resolve model label from foreign key value.
      *
      * @param mixed $foreignKeyValue
-     * @param EnrichmentConfigInterface $config
-     * @return string|null
      */
     private function resolveModelLabel($foreignKeyValue, EnrichmentConfigInterface $config): ?string
     {
@@ -217,8 +231,8 @@ final class ActivityLogEnricher
         try {
             $modelClass = $config->getModelClass();
             $model = $modelClass::withTrashed()->find($foreignKeyValue);
-            
-            if (!$model) {
+
+            if (! $model) {
                 return null;
             }
 
@@ -231,36 +245,41 @@ final class ActivityLogEnricher
 
     /**
      * Get label from model using specified attribute or method.
-     *
-     * @param Model $model
-     * @param string $labelAttribute
-     * @return string
      */
     private function getModelLabel(Model $model, string $labelAttribute): string
     {
         // First, check if it's a direct method on the model (e.g., getLabelWithoutClass)
         if (method_exists($model, $labelAttribute)) {
             $result = $model->{$labelAttribute}();
+
             return (string) $result;
         }
 
-        // Then, try as attribute accessor method (e.g., getLabelAttribute)
-        $methodName = 'get' . ucfirst($labelAttribute) . 'Attribute';
+        // Then, try as attribute accessor method (e.g., getLabelAttribute or getCustomLabelAttribute)
+        $methodName = 'get' . str_replace('_', '', ucwords($labelAttribute, '_')) . 'Attribute';
+
         if (method_exists($model, $methodName)) {
             $result = $model->{$methodName}();
+
             return (string) $result;
         }
 
         // Try as direct attribute (including appended attributes)
         try {
             $attributes = $model->getAttributes();
+
             if (array_key_exists($labelAttribute, $attributes)) {
                 return (string) $model->{$labelAttribute};
             }
 
-            // Check if it's an appended attribute
+            // Check if it's an appended attribute - try to access it
             if (in_array($labelAttribute, $model->getAppends(), true)) {
-                return (string) $model->{$labelAttribute};
+                // For appended attributes, try accessing via attribute
+                $value = $model->getAttribute($labelAttribute);
+
+                if ($value !== null) {
+                    return (string) $value;
+                }
             }
         } catch (Throwable) {
             // Continue to fallback
@@ -273,9 +292,6 @@ final class ActivityLogEnricher
     /**
      * Guess the new key name from foreign key.
      * Removes '_id' suffix if present.
-     *
-     * @param string $foreignKey
-     * @return string
      */
     private function guessNewKey(string $foreignKey): string
     {
@@ -289,22 +305,21 @@ final class ActivityLogEnricher
     /**
      * Update activity properties with enriched data.
      *
-     * @param Activity $activity
      * @param array<string, mixed> $old
      * @param array<string, mixed> $attributes
      */
     private function updateActivityProperties(Activity $activity, array $old, array $attributes): void
     {
         $newProperties = [];
-        
-        if (!empty($old)) {
+
+        if (! empty($old)) {
             $newProperties['old'] = $old;
         }
-        
-        if (!empty($attributes)) {
+
+        if (! empty($attributes)) {
             $newProperties['attributes'] = $attributes;
         }
-        
+
         $activity->properties = collect($newProperties);
     }
 }

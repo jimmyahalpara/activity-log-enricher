@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher;
+namespace JimmyAhalpara\ActivityLogEnricher;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ final class ActivityLogEnricherServiceProvider extends ServiceProvider
             'activity-log-enricher'
         );
 
-        $this->app->singleton(ActivityLogEnricher::class, function () {
+        $this->app->singleton(ActivityLogEnricher::class, static function () {
             return new ActivityLogEnricher();
         });
 

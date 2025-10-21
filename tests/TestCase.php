@@ -2,20 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Ahalpara\ActivityLogEnricher\Tests;
+namespace JimmyAhalpara\ActivityLogEnricher\Tests;
 
+use Illuminate\Foundation\Application;
+use JimmyAhalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Ahalpara\ActivityLogEnricher\ActivityLogEnricherServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 
+    /**
+     * @param Application $app
+     *
+     * @return array<int, class-string>
+     */
     protected function getPackageProviders($app): array
     {
         return [
@@ -23,6 +29,9 @@ abstract class TestCase extends OrchestraTestCase
         ];
     }
 
+    /**
+     * @param Application $app
+     */
     protected function getEnvironmentSetUp($app): void
     {
         // Set up test database

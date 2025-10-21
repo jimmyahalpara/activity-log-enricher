@@ -15,7 +15,6 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR12' => true,
-        '@PHP81Migration' => true,
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         
@@ -35,7 +34,6 @@ return (new PhpCsFixer\Config())
             'statements' => ['return', 'throw', 'try', 'if', 'foreach', 'for', 'while'],
         ],
         'blank_line_after_opening_tag' => true,
-        'single_blank_line_before_namespace' => true,
         
         // Casing
         'constant_case' => ['case' => 'lower'],
@@ -79,7 +77,7 @@ return (new PhpCsFixer\Config())
         
         // Function notation
         'function_declaration' => ['closure_function_spacing' => 'one'],
-        'function_typehint_space' => true,
+        'type_declaration_spaces' => true,
         'lambda_not_used_import' => true,
         'method_argument_space' => [
             'on_multiline' => 'ensure_fully_multiline',
@@ -177,10 +175,7 @@ return (new PhpCsFixer\Config())
         
         // Whitespace
         'array_indentation' => true,
-        'blank_line_before_statement' => [
-            'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try'],
-        ],
-        'compact_nullable_typehint' => true,
+        'compact_nullable_type_declaration' => true,
         'heredoc_indentation' => true,
         'method_chaining_indentation' => true,
         'no_extra_blank_lines' => [

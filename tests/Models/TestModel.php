@@ -20,16 +20,23 @@ class TestModel extends Model
 
     public function getLabelAttribute(): string
     {
-        return $this->getAttribute('name') . ' (' . $this->getAttribute('id') . ')';
+        $name = $this->getAttribute('name');
+        $id = $this->getAttribute('id');
+
+        return (string) $name . ' (' . (string) $id . ')';
     }
 
     public function getCustomLabelAttribute(): string
     {
-        return 'Custom: ' . $this->getAttribute('name');
+        $name = $this->getAttribute('name');
+
+        return 'Custom: ' . (string) $name;
     }
 
     public function getLabelMethod(): string
     {
-        return 'Method: ' . $this->getAttribute('name');
+        $name = $this->getAttribute('name');
+
+        return 'Method: ' . (string) $name;
     }
 }

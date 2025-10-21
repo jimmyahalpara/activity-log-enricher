@@ -76,7 +76,7 @@ final class ActivityLogEnricher
      */
     public function enrichActivityWithConfig(Activity $activity, string $configKey = 'default'): void
     {
-        /** @var array<string, mixed> $config */
+        /** @var array<string, array<string, mixed>> $config */
         $config = config("activity-log-enricher.mappings.{$configKey}", []);
 
         if (empty($config) || ! is_array($config)) {
@@ -98,13 +98,19 @@ final class ActivityLogEnricher
         return collect($fieldMappings)->map(function (array $config, string $foreignKey): EnrichmentConfig {
             $this->validateMappingConfig($config, $foreignKey);
 
+            $labelAttribute = $config['label_attribute'] ?? 'label';
+            $newKey = $config['new_key'] ?? $this->guessNewKey($foreignKey);
+
+            // After validation, we know class is a string
+            assert(is_string($config['class']));
+
             return new EnrichmentConfig(
                 foreignKey: $foreignKey,
-                modelClass: (string) $config['class'],
-                labelAttribute: (string) ($config['label_attribute'] ?? 'label'),
-                newKey: (string) ($config['new_key'] ?? $this->guessNewKey($foreignKey))
+                modelClass: $config['class'],
+                labelAttribute: is_string($labelAttribute) ? $labelAttribute : 'label',
+                newKey: is_string($newKey) ? $newKey : $foreignKey
             );
-        });
+        })->values();
     }
 
     /**
@@ -120,7 +126,11 @@ final class ActivityLogEnricher
             throw new InvalidModelException("Missing 'class' key for field mapping: {$foreignKey}");
         }
 
-        $className = (string) $config['class'];
+        if (! is_string($config['class'])) {
+            throw new InvalidModelException("Class name must be a string for field: {$foreignKey}");
+        }
+
+        $className = $config['class'];
 
         if (! class_exists($className)) {
             throw new InvalidModelException("Model class '{$className}' does not exist for field: {$foreignKey}");
@@ -193,9 +203,10 @@ final class ActivityLogEnricher
     {
         foreach ($items as $index => $item) {
             if (is_array($item) && array_key_exists($nestedKey, $item)) {
-                $label = $this->resolveModelLabel($item[$nestedKey], $config);
+                $foreignKeyValue = $item[$nestedKey];
+                $label = $this->resolveModelLabel($foreignKeyValue, $config);
 
-                if ($label !== null) {
+                if ($label !== null && is_array($items[$index])) {
                     $items[$index][$config->getNewKey()] = $label;
                 }
             }

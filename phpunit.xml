@@ -8,6 +8,10 @@
     stopOnFailure="false"
     cacheDirectory=".phpunit.cache"
     backupGlobals="false"
+    failOnWarning="false"
+    failOnRisky="false"
+    failOnDeprecation="false"
+    failOnNotice="false"
 >
     <testsuites>
         <testsuite name="Unit">
